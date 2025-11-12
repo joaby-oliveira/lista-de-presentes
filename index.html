@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Presentes - Joaby &amp; Mariana</title>
+  <style>
+    :root {
+      --primary-color: #4a6fa5;
+      --secondary-color: #f9f5f0;
+      --accent-color: #e0b973;
+      --text-color: #2b2b2b;
+      --muted-text: #5f5f5f;
+      --surface-color: #ffffff;
+      --danger-color: #c0392b;
+      --max-width: 1120px;
+      font-size: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(135deg, rgba(74, 111, 165, 0.95), rgba(224, 185, 115, 0.95)),
+        url('https://images.unsplash.com/photo-1520854221050-0f4caff449fb?auto=format&fit=crop&w=1600&q=80') center/cover;
+      color: #fff;
+      text-align: center;
+      padding: clamp(3rem, 6vw, 6rem) 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.25);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 3.75rem);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 2.8vw, 1.35rem);
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-plan {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      display: grid;
+      gap: 1.25rem;
+      backdrop-filter: blur(6px);
+    }
+
+    .plan-section h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .plan-section p,
+    .plan-section ul {
+      margin: 0;
+      color: #f4f4f4;
+    }
+
+    .plan-section ul {
+      list-style: none;
+      padding-left: 0;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    main {
+      max-width: var(--max-width);
+      margin: clamp(2.5rem, 6vw, 5rem) auto;
+      padding: 0 1.5rem 3rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    .gift-list-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      display: grid;
+      gap: 1rem;
+      justify-items: center;
+    }
+
+    .gift-list-header h2 {
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      color: var(--primary-color);
+      margin-bottom: 0.25rem;
+    }
+
+    .gift-list-header p {
+      color: var(--muted-text);
+      margin: 0;
+      max-width: 640px;
+    }
+
+    .admin-action-bar {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .admin-note {
+      font-size: 0.9rem;
+      color: var(--muted-text);
+    }
+
+    .button {
+      appearance: none;
+      border: none;
+      border-radius: 999px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--primary-color);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.25s ease, transform 0.25s ease;
+    }
+
+    .button:hover,
+    .button:focus {
+      background: #36567f;
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    .gift-grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .gift-card {
+      background: var(--surface-color);
+      border-radius: 1rem;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      border: 1px solid rgba(74, 111, 165, 0.15);
+      overflow: hidden;
+    }
+
+    .gift-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+    }
+
+    .gift-card figure {
+      margin: 0;
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+    }
+
+    .gift-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .gift-card:hover img {
+      transform: scale(1.03);
+    }
+
+    .gift-card-content {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .gift-card h3 {
+      margin: 0;
+      color: var(--text-color);
+      font-size: 1.2rem;
+    }
+
+    .gift-card p {
+      margin: 0;
+      color: var(--muted-text);
+      flex: 1;
+    }
+
+    .gift-card a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: #fff;
+      background: var(--primary-color);
+      padding: 0.75rem 1.25rem;
+      border-radius: 999px;
+      font-weight: 600;
+      transition: background 0.25s ease;
+    }
+
+    .gift-card a:hover,
+    .gift-card a:focus {
+      background: #36567f;
+      outline: none;
+    }
+
+    .gift-empty-state {
+      text-align: center;
+      color: var(--muted-text);
+      font-size: 1.05rem;
+      padding: 2rem 1rem;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 1rem;
+      border: 1px dashed rgba(74, 111, 165, 0.3);
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 20;
+    }
+
+    .modal.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-dialog {
+      background: var(--surface-color);
+      border-radius: 1rem;
+      max-width: 480px;
+      width: 100%;
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      position: relative;
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      border: none;
+      background: transparent;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--muted-text);
+      line-height: 1;
+    }
+
+    .modal-close:hover,
+    .modal-close:focus {
+      color: var(--danger-color);
+      outline: none;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .form-field {
+      display: grid;
+      gap: 0.35rem;
+      text-align: left;
+    }
+
+    .form-field label {
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(74, 111, 165, 0.25);
+      padding: 0.85rem 1rem;
+      font-size: 1rem;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 3rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+      outline: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem 3rem;
+      color: var(--muted-text);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 600px) {
+      .modal-dialog {
+        padding: 1.25rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hero-content">
+      <p class="hero-subtitle">Celebre o amor de Joaby &amp; Mariana</p>
+      <h1 class="hero-title">Lista de Presentes do Casamento</h1>
+      <div class="hero-plan" aria-label="Plano da celebração">
+        <div class="plan-section">
+          <h3>Visão da Página</h3>
+          <p>Receba nossos convidados com uma mensagem calorosa, compartilhando a essência da nossa história e do grande dia.</p>
+        </div>
+        <div class="plan-section">
+          <h3>Destaques do Casamento</h3>
+          <ul>
+            <li>Data: 21 de outubro de 2024</li>
+            <li>Local: Sítio Encanto das Flores, Belo Horizonte</li>
+            <li>Dress code: Traje passeio completo</li>
+          </ul>
+        </div>
+        <div class="plan-section">
+          <h3>Como Presentear</h3>
+          <p>Explore a seleção de presentes pensados com carinho. Cada item acompanha foto e link direto para facilitar a escolha.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="gift-list" aria-labelledby="gift-list-title">
+      <div class="gift-list-header">
+        <div>
+          <h2 id="gift-list-title">Seleção Especial de Presentes</h2>
+          <p>Escolha um presente que ajude a construir o lar de Joaby e Mariana. Cada contribuição é um gesto de carinho inesquecível.</p>
+        </div>
+        <div class="admin-action-bar" data-admin-actions hidden>
+          <span class="admin-note">Modo administrador ativo</span>
+          <button type="button" class="button" data-open-modal>Adicionar presente</button>
+        </div>
+      </div>
+      <div class="gift-grid" id="giftGrid" aria-live="polite" aria-busy="false"></div>
+    </section>
+  </main>
+
+  <div class="modal" data-modal aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button type="button" class="modal-close" aria-label="Fechar" data-close-modal>&times;</button>
+      <div class="modal-header">
+        <h2 id="modal-title">Adicionar novo presente</h2>
+        <p>Informe os detalhes do presente para que apareça na lista oficial.</p>
+      </div>
+      <form class="form-grid" data-gift-form>
+        <div class="form-field">
+          <label for="giftName">Nome do presente</label>
+          <input id="giftName" name="giftName" type="text" required maxlength="120" placeholder="Ex.: Conjunto de panelas antiaderentes">
+        </div>
+        <div class="form-field">
+          <label for="giftDescription">Descrição</label>
+          <textarea id="giftDescription" name="giftDescription" rows="3" required maxlength="280" placeholder="Descreva o porquê esse presente é especial"></textarea>
+        </div>
+        <div class="form-field">
+          <label for="giftLink">Link do presente</label>
+          <input id="giftLink" name="giftLink" type="url" required placeholder="https://lojaexemplo.com/presente" inputmode="url">
+        </div>
+        <div class="form-field">
+          <label for="giftImage">URL da imagem</label>
+          <input id="giftImage" name="giftImage" type="url" required placeholder="https://imagens.com/foto.jpg" inputmode="url">
+        </div>
+        <button type="submit" class="button">Salvar presente</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>Com carinho, Joaby &amp; Mariana. Agradecemos por fazer parte desta celebração.</p>
+  </footer>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'joaby-mariana-gift-list';
+      const state = {
+        gifts: []
+      };
+
+      function generateGiftId() {
+        if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+          return `gift-${crypto.randomUUID()}`;
+        }
+        return `gift-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+      }
+
+      function isGiftRecord(candidate) {
+        return candidate && typeof candidate === 'object'
+          && typeof candidate.name === 'string'
+          && typeof candidate.description === 'string'
+          && typeof candidate.linkUrl === 'string'
+          && typeof candidate.imageUrl === 'string';
+      }
+
+      function normalizeGiftRecord(record) {
+        return {
+          id: typeof record.id === 'string' && record.id.trim().length > 0 ? record.id : generateGiftId(),
+          name: record.name.trim(),
+          description: record.description.trim(),
+          linkUrl: record.linkUrl.trim(),
+          imageUrl: record.imageUrl.trim()
+        };
+      }
+
+      function cloneGifts(gifts) {
+        return gifts.map(normalizeGiftRecord);
+      }
+
+      function getDefaultGifts() {
+        return cloneGifts([
+          {
+            id: 'default-1',
+            name: 'Jogo de Panelas de Cerâmica',
+            description: 'Conjunto moderno e durável para preparar os pratos favoritos do casal com estilo e praticidade.',
+            linkUrl: 'https://www.example.com/panelas-ceramica',
+            imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'
+          },
+          {
+            id: 'default-2',
+            name: 'Kit de Cama de Algodão Egípcio',
+            description: 'Lençóis macios e respiráveis que garantem noites de descanso aconchegantes para os recém-casados.',
+            linkUrl: 'https://www.example.com/kit-cama-algodao',
+            imageUrl: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80'
+          },
+          {
+            id: 'default-3',
+            name: 'Liquidificador Profissional',
+            description: 'Equipamento potente para smoothies, sopas e receitas especiais compartilhadas a dois.',
+            linkUrl: 'https://www.example.com/liquidificador-profissional',
+            imageUrl: 'https://images.unsplash.com/photo-1586201375761-83865001e31b?auto=format&fit=crop&w=800&q=80'
+          },
+          {
+            id: 'default-4',
+            name: 'Experiência Gastronômica',
+            description: 'Voucher para um jantar degustação em um restaurante renomado, celebrando momentos inesquecíveis.',
+            linkUrl: 'https://www.example.com/experiencia-gastronomica',
+            imageUrl: 'https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&w=800&q=80'
+          },
+          {
+            id: 'default-5',
+            name: 'Conjunto de Taças de Cristal',
+            description: 'Peças elegantes para brindar às conquistas e alegrias que virão ao longo da vida a dois.',
+            linkUrl: 'https://www.example.com/tacas-cristal',
+            imageUrl: 'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?auto=format&fit=crop&w=800&q=80'
+          },
+          {
+            id: 'default-6',
+            name: 'Máquina de Café Espresso',
+            description: 'Para começar os dias com energia e compartilhar momentos especiais ao redor de uma boa xícara de café.',
+            linkUrl: 'https://www.example.com/maquina-cafe',
+            imageUrl: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80'
+          }
+        ]);
+      }
+
+      function isAdminMode(searchString = window.location.search) {
+        const params = new URLSearchParams(searchString);
+        return params.get('admin') === 'true';
+      }
+
+      function loadGifts(storage = window.localStorage, fallback = getDefaultGifts()) {
+        const storedValue = storage.getItem(STORAGE_KEY);
+
+        if (!storedValue) {
+          const initialGifts = cloneGifts(fallback);
+          storage.setItem(STORAGE_KEY, JSON.stringify(initialGifts));
+          return initialGifts;
+        }
+
+        try {
+          const parsed = JSON.parse(storedValue);
+
+          if (Array.isArray(parsed)) {
+            if (parsed.length === 0) {
+              return [];
+            }
+
+            const sanitized = parsed
+              .filter(isGiftRecord)
+              .map(normalizeGiftRecord);
+
+            if (sanitized.length > 0) {
+              if (sanitized.length !== parsed.length) {
+                storage.setItem(STORAGE_KEY, JSON.stringify(sanitized));
+              }
+              return sanitized;
+            }
+          }
+        } catch (error) {
+          console.warn('Erro ao ler lista de presentes do armazenamento. Fallback será utilizado.', error);
+        }
+
+        const fallbackGifts = cloneGifts(fallback);
+        storage.setItem(STORAGE_KEY, JSON.stringify(fallbackGifts));
+        return fallbackGifts;
+      }
+
+      function saveGifts(storage = window.localStorage, gifts = state.gifts) {
+        if (!Array.isArray(gifts)) {
+          throw new TypeError('A lista de presentes deve ser um array.');
+        }
+        storage.setItem(STORAGE_KEY, JSON.stringify(gifts));
+      }
+
+      function createGiftCardElement(gift) {
+        const giftCard = document.createElement('article');
+        giftCard.className = 'gift-card';
+        giftCard.dataset.giftId = gift.id;
+
+        const figure = document.createElement('figure');
+        const image = document.createElement('img');
+        image.src = gift.imageUrl;
+        image.alt = gift.name;
+        image.loading = 'lazy';
+        figure.appendChild(image);
+
+        const content = document.createElement('div');
+        content.className = 'gift-card-content';
+
+        const title = document.createElement('h3');
+        title.textContent = gift.name;
+
+        const description = document.createElement('p');
+        description.textContent = gift.description;
+
+        const link = document.createElement('a');
+        link.href = gift.linkUrl;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+
+        const linkLabel = document.createElement('span');
+        linkLabel.textContent = 'Ver presente';
+        link.appendChild(linkLabel);
+
+        content.append(title, description, link);
+        giftCard.append(figure, content);
+
+        return giftCard;
+      }
+
+      function renderGifts(gifts, container) {
+        if (!container) {
+          return;
+        }
+
+        container.setAttribute('aria-busy', 'true');
+
+        if (!Array.isArray(gifts) || gifts.length === 0) {
+          container.innerHTML = '<p class="gift-empty-state">Ainda não há presentes cadastrados. Seja o primeiro a adicionar um presente especial!</p>';
+          container.setAttribute('aria-busy', 'false');
+          return;
+        }
+
+        container.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        gifts.forEach((gift) => {
+          fragment.appendChild(createGiftCardElement(gift));
+        });
+        container.appendChild(fragment);
+        container.setAttribute('aria-busy', 'false');
+      }
+
+      function showModal(modalElement) {
+        modalElement.classList.add('is-visible');
+        modalElement.setAttribute('aria-hidden', 'false');
+        const firstInput = modalElement.querySelector('input, textarea');
+        if (firstInput) {
+          firstInput.focus();
+        }
+      }
+
+      function hideModal(modalElement) {
+        modalElement.classList.remove('is-visible');
+        modalElement.setAttribute('aria-hidden', 'true');
+      }
+
+      function runUnitTests() {
+        const results = [];
+
+        function createFakeStorage() {
+          const store = new Map();
+          return {
+            getItem(key) {
+              return store.has(key) ? store.get(key) : null;
+            },
+            setItem(key, value) {
+              store.set(key, String(value));
+            },
+            removeItem(key) {
+              store.delete(key);
+            }
+          };
+        }
+
+        function test(title, assertion) {
+          try {
+            assertion();
+            results.push({ title, status: 'passed' });
+          } catch (error) {
+            results.push({ title, status: 'failed', error });
+          }
+        }
+
+        function assert(condition, message) {
+          if (!condition) {
+            throw new Error(message);
+          }
+        }
+
+        test('isAdminMode reconhece admin=true', () => {
+          assert(isAdminMode('?admin=true') === true, 'Deve retornar true quando admin=true');
+        });
+
+        test('isAdminMode retorna false para outras combinações', () => {
+          assert(isAdminMode('?foo=bar') === false, 'Deve retornar false quando admin não está presente');
+        });
+
+        test('loadGifts utiliza fallback quando o armazenamento está vazio', () => {
+          const storage = createFakeStorage();
+          const fallback = getDefaultGifts();
+          const loaded = loadGifts(storage, fallback);
+          assert(Array.isArray(loaded) && loaded.length === fallback.length, 'Deve carregar itens do fallback');
+          assert(storage.getItem(STORAGE_KEY) !== null, 'Deve persistir fallback no armazenamento');
+        });
+
+        test('loadGifts retorna fallback quando o JSON é inválido', () => {
+          const storage = createFakeStorage();
+          storage.setItem(STORAGE_KEY, 'invalido');
+          const fallback = getDefaultGifts();
+          const loaded = loadGifts(storage, fallback);
+          assert(loaded.length === fallback.length, 'Deve retornar fallback em caso de erro');
+        });
+
+        test('loadGifts retorna dados persistidos válidos', () => {
+          const storage = createFakeStorage();
+          const persisted = [
+            {
+              id: 'test-1',
+              name: 'Presente Teste',
+              description: 'Descrição teste',
+              linkUrl: 'https://exemplo.com',
+              imageUrl: 'https://exemplo.com/imagem.jpg'
+            }
+          ];
+          storage.setItem(STORAGE_KEY, JSON.stringify(persisted));
+          const loaded = loadGifts(storage, getDefaultGifts());
+          assert(loaded.length === 1, 'Deve carregar o item armazenado');
+          assert(loaded[0].id === 'test-1', 'Deve preservar o id informado');
+        });
+
+        test('loadGifts ignora itens inválidos e mantém os válidos', () => {
+          const storage = createFakeStorage();
+          const persisted = [
+            {
+              id: 'valid-1',
+              name: 'Item válido',
+              description: 'Completo',
+              linkUrl: 'https://exemplo.com',
+              imageUrl: 'https://exemplo.com/imagem.jpg'
+            },
+            {
+              id: 'invalid-1',
+              name: 'Item inválido'
+            }
+          ];
+          storage.setItem(STORAGE_KEY, JSON.stringify(persisted));
+          const loaded = loadGifts(storage, getDefaultGifts());
+          assert(loaded.length === 1, 'Deve remover itens inválidos');
+          assert(loaded[0].id === 'valid-1', 'Deve manter o item válido');
+        });
+
+        test('saveGifts rejeita dados que não sejam arrays', () => {
+          let errorCaught = false;
+          try {
+            saveGifts(createFakeStorage(), 'não é array');
+          } catch (error) {
+            errorCaught = error instanceof TypeError;
+          }
+          assert(errorCaught, 'Deve lançar TypeError quando receber algo diferente de array');
+        });
+
+        test('saveGifts persiste o array informado', () => {
+          const storage = createFakeStorage();
+          const items = [
+            {
+              id: 'abc',
+              name: 'Teste',
+              description: 'Item teste',
+              linkUrl: 'https://exemplo.com',
+              imageUrl: 'https://exemplo.com/img.jpg'
+            }
+          ];
+          saveGifts(storage, items);
+          const stored = JSON.parse(storage.getItem(STORAGE_KEY));
+          assert(Array.isArray(stored) && stored[0].id === 'abc', 'Deve armazenar os itens no storage');
+        });
+
+        console.groupCollapsed('Resultados dos testes unitários');
+        results.forEach((result) => {
+          if (result.status === 'passed') {
+            console.log(`✅ ${result.title}`);
+          } else {
+            console.error(`❌ ${result.title}`, result.error);
+          }
+        });
+        console.groupEnd();
+
+        return results;
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const giftGrid = document.getElementById('giftGrid');
+        const modal = document.querySelector('[data-modal]');
+        const giftForm = document.querySelector('[data-gift-form]');
+        const adminActions = document.querySelector('[data-admin-actions]');
+        const openModalButton = document.querySelector('[data-open-modal]');
+        const closeModalButton = document.querySelector('[data-close-modal]');
+
+        const adminMode = isAdminMode();
+        if (adminMode) {
+          adminActions.removeAttribute('hidden');
+        }
+
+        state.gifts = loadGifts(window.localStorage, getDefaultGifts());
+        renderGifts(state.gifts, giftGrid);
+
+        if (adminMode) {
+          openModalButton.addEventListener('click', () => {
+            showModal(modal);
+          });
+
+          closeModalButton.addEventListener('click', () => {
+            hideModal(modal);
+          });
+
+          modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+              hideModal(modal);
+            }
+          });
+
+          document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modal.classList.contains('is-visible')) {
+              hideModal(modal);
+            }
+          });
+
+          giftForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(giftForm);
+            const newGift = normalizeGiftRecord({
+              id: generateGiftId(),
+              name: formData.get('giftName') || '',
+              description: formData.get('giftDescription') || '',
+              linkUrl: formData.get('giftLink') || '',
+              imageUrl: formData.get('giftImage') || ''
+            });
+
+            state.gifts = [...state.gifts, newGift];
+            saveGifts(window.localStorage, state.gifts);
+            renderGifts(state.gifts, giftGrid);
+
+            giftForm.reset();
+            hideModal(modal);
+          });
+        }
+
+        runUnitTests();
+      });
+    })();
+  </script>
+</body>
+</html>
